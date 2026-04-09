@@ -11,11 +11,11 @@ import logging
 
 # 2. DAG 정의
 with DAG() as dag:
-    # task 정의
+    # 3. task 정의
     t1 = BashOperator()
     t2 = BashOperator()
     t3 = PythonOperator()
 
-    # 의존성 정의
+    # 4. 의존성 정의
     t1 >> t2 >> t3
     pass
