@@ -47,18 +47,18 @@ with DAG(
     task_start = EmptyOperator(
             task_id="start",
             # jinja에서 값 출력 표현식 => {{변수|값|식|함수 등등}}
-            bash_command= "echo 'DAG t1 task 수행시간 {{ds}},{{ds_nodash}}'",
+            
     )
     task_branch = BranchPythonOperator(
         task_id="branching",
-        python_callable= _branching,
+        python_callable= _branching
     )
     task_process = PythonOperator(
         task_id="process",
         python_callable= _process
     )
     task_skip = EmptyOperator(
-        task_id="skip",
+        task_id="skip"
     )
     task_end = EmptyOperator(
         task_id="end",

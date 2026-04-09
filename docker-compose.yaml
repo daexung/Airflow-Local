@@ -53,6 +53,8 @@ x-airflow-common:
   # build: .
   environment:
     &airflow-common-env
+    TZ: 'Asia/Seoul'
+    AIRFLOW_WEBSERVER_DEFAULT_UI_TIMEZONE: 'Asia/Seoul'
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
@@ -68,7 +70,10 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
+    #_PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
+    apache-airflow-providers-mysql
+
     # The following line can be used to set a custom config file, stored in the local config folder
     # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
     # AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
@@ -283,6 +288,24 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
+    mysql:
+      image: mysql: 8.0
+      container_name : airflow-class-mysql
+      environment :
+        MYSQL_ROOT_PASSWORD : root
+        MYSQL_DATABASE:  my_datawarehouse
+        MYSQL_USER: guest
+        MYSQL_PASSWORD: guest
+      ports:
+        - "3306:3306"
+        # mysql 컨테이너가 삭제되도 데이터는 보존
+      volumes :
+        - mysql-db-volume:/var/lib/mysql
+      healthcheck:
+        test: ["CMD","mysqladming","ping","-h","localhost"]
+        interval :10s
+        timeout : 5s
+        retries : 5
 volumes:
   postgres-db-volume:
+  mysql-db-volume:
