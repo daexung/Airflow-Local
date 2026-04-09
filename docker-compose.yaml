@@ -71,8 +71,7 @@ x-airflow-common:
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
     #_PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
-    apache-airflow-providers-mysql
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-} apache-airflow-providers-mysql
 
     # The following line can be used to set a custom config file, stored in the local config folder
     # If you want to use it, outcomment it and replace airflow.cfg with the name of your config file
@@ -288,24 +287,25 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-    mysql:
-      image: mysql: 8.0
-      container_name : airflow-class-mysql
-      environment :
-        MYSQL_ROOT_PASSWORD : root
-        MYSQL_DATABASE:  my_datawarehouse
+  mysql:
+      image: mysql:8.0
+      container_name: airflow-class-mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: my_datawarehouse
         MYSQL_USER: guest
         MYSQL_PASSWORD: guest
       ports:
         - "3306:3306"
-        # mysql 컨테이너가 삭제되도 데이터는 보존
-      volumes :
+      # mysql 컨테이너가 삭제되도, 데이터는 보존된다!!
+      volumes:
         - mysql-db-volume:/var/lib/mysql
       healthcheck:
-        test: ["CMD","mysqladming","ping","-h","localhost"]
-        interval :10s
-        timeout : 5s
-        retries : 5
+        test: ["CMD", "mysqladmin","ping","-h","localhost"]
+        interval: 10s
+        timeout: 5s
+        retries: 5  
+      
 volumes:
   postgres-db-volume:
   mysql-db-volume:
