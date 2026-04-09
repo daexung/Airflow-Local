@@ -9,9 +9,9 @@ from airflow.operators.bash import BashOperator
 import logging
 
 #3-1 콜백 함수 정의
-def _prin(**kwargs):
-    logging.info(f'ds 출력 {kwargs['ds'] }')
-    logging.info(f'nodash 출력 {kwargs['ds_nodash']}')
+def _print(**kwargs):
+    logging.info(f'ds 출력 {kwargs["ds"] }')
+    logging.info(f'nodash 출력 {kwargs["ds_nodash"]}')
 
     pass
 
@@ -19,7 +19,7 @@ def _prin(**kwargs):
 with DAG(
     dag_id      = "03_basic_macro_jinja",
     description = "macro를 통해 context 접근, jinja를 통해 표현 ",
-    default_args={}
+    default_args={
         'owner' : 'de2teammanger',
         'retries' : 1,
         'retry_delay' : timedelta(minutes=1)
@@ -41,7 +41,7 @@ with DAG(
     )
     t3 = PythonOperator(
         task_id="jinja_used_python",
-        python_callable=""
+        python_callable= _print
     )
 
     # 4. 의존성 정의
