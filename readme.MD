@@ -1,3 +1,6 @@
+# git 주소
+    https://github.com/edu-kenshi/airflow-local
+
 # 패키지
     - 필요한 패키지는 전부 컨테이너 상에 설치되어 있음
     - 개발 -> IDE를 통해서 호스트 PC에서 작업중임
