@@ -59,7 +59,7 @@ try:
         # kinesis 전달
         kinesis.put_record(
             # 스트림 이름
-            StreamName = "de-ai-18-ap-northeast-2-kds-stock-analysis",
+            StreamName = "de-ai-18-ap-northeast-2-kds-stock-input",
             # 데이터 (객체 직렬화하여 문자열 제공)
             Data = json.dumps( data ),
             # 티커별로 샤드(고속도로의 차선) 분산하여 kinesis에서 전달
