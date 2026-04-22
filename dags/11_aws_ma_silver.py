@@ -52,19 +52,39 @@ with DAG(
         params = {'database_silver': DATABASE_SILVER, 'tbl_nm':SILVER_TBL_NAME}
     )
     ctas_silver_task = AthenaOperator(
-        task_id ='ctas_silver',
-        query = '''
-            Create Table if not exists {{ params.database_silver }}.{{ params.tbl_nm }}
+        task_id = 'ctas_silver',
+        query   = '''
+            Create Table if not exists {{ params.database_silver }}.{{ params.tbl_nm }};
             with (
-            
-            ) As
-            SELECT
-            FROM {{ params.DATABASE_BRONZE}}.raw_bronze_tbl
-            where year =
-                and month =
-                and day =
-                and hour =
-        '''
+
+            ) As 
+            Select 
+                event_id
+                event_time => event_timestamp,
+                data.user_id,
+                data.item_id,
+                data.price,
+                data.qty,
+                (data.price * data.qty) as total_price, 
+                data.store_id,
+                source_ip,
+                user_agent,
+                cast(year || '-' || month || '-' ||day as VARCHAR) as dt,
+                hour as hr, 
+              
+            from {{ params.DATABASE_BRONZE }}.raw_bronze_tbl
+            where   year = {{ execution_date.foramt('YYYY') }}
+                and month= {{ execution_date.foramt('MM') }}
+                and day  = {{ execution_date.foramt('DD') }}
+                and hour = {{ execution_date.foramt('HH') }}
+
+        ''',  # 이 위는 브론즈 데이터에서 내가 원하는걸 빼오는 것
+        database= DATABASE_SILVER,
+        params  = {
+            'database_bronze':DATABASE_BRONZE, 
+            'database_silver':DATABASE_SILVER, 
+            'tbl_nm':SILVER_TBL_NAME
+        } 
     )
     # 5. 의존성 구성
     drop_silver_task >> ctas_silver_task
