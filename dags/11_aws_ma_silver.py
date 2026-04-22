@@ -53,7 +53,18 @@ with DAG(
     )
     ctas_silver_task = AthenaOperator(
         task_id ='ctas_silver',
-        query = 'desc {{params.tbl_nm}}'
+        query = '''
+            Create Table if not exists {{ params.database_silver }}.{{ params.tbl_nm }}
+            with (
+            
+            ) As
+            SELECT
+            FROM {{ params.DATABASE_BRONZE}}.raw_bronze_tbl
+            where year =
+                and month =
+                and day =
+                and hour =
+        '''
     )
     # 5. 의존성 구성
     drop_silver_task >> ctas_silver_task
