@@ -1,0 +1,22 @@
+# git 주소
+    https://github.com/edu-kenshi/airflow-local
+
+# 패키지
+    - 필요한 패키지는 전부 컨테이너 상에 설치되어 있음
+    - 개발 -> IDE를 통해서 호스트 PC에서 작업중임
+        - IDE에서  컨테이너로 접속해서 개발
+        - 호스트 pc에서 가상환경 등 구성하여 필요한 패키지 설치
+        '''
+            pip install apache-airflow==2.11.2
+            pip install apache-airflow-providers-mysql
+        '''
+
+
+# 로그 제너레이터 
+    - 구조
+    '''
+        /log_gen
+        L log_generator.py : 로그 생성 클래스 모듈 포함
+        L run.py           : 생성 코드 샘플
+    '''
+    - 산업별 로그 생성 클래스 모듈
